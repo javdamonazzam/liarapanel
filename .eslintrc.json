@@ -1,0 +1,8 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    // I suggest you add those two rules:
+    "react-hooks/exhaustive-deps": "off"
+  }
+}
+
