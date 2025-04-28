@@ -19,13 +19,17 @@ export default function useFetchUsers() {
   const full_name = useFilterUser((state) => state.fullName);
   const role = useFilterUser((state) => state.role);
   async function fetchUsers() {
+    console.log("start service <<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    
     const res = await ApiService.get<User[]>(
       'service/find',
       { filter: { user_id: getTokenInfo().id } },
       { Authorization: `Bearer ${getToken()}` }
     );
-
+    
+    console.log(res.data,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     setTotal(res.data.pagination.lastPage);
+    
     return res.data;
   }
   return useQuery({ queryKey: ['users', { activeTab, page, role, full_name, take }], queryFn: fetchUsers });
