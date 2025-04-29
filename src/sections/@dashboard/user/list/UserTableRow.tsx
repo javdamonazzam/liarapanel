@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 // @mui
 
-import { TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { TableRow, TableCell, Typography, MenuItem, Button } from '@mui/material';
 // components
 import QrModal from '@components/QrModal.tsx';
 import useDeleteUser from '@/react-query/user/useDeleteUser.ts';
@@ -17,6 +17,7 @@ import { FcLink } from 'react-icons/fc';
 import Iconify from '@/components/Iconify';
 import ConfirmModal from '@/components/ConfirmModal';
 import useRenewaUser from '@/react-query/user/useRenewaUser';
+import useUpdateUser from '@/react-query/user/useUpdateUser';
 // ----------------------------------------------------------------------
 
 type UserTableRowPropTypes = {
@@ -24,9 +25,9 @@ type UserTableRowPropTypes = {
 
 };
 
-export default function UserTableRow({row}: UserTableRowPropTypes) {
+export default function UserTableRow({ row }: UserTableRowPropTypes) {
   const { title, status, service_type, createdAt, month, pharmacy, server_info } = row;
-  const { mutate: RenewaUser, isPending:pend } = useRenewaUser();
+  const { mutate: RenewaUser, isPending: pend } = useRenewaUser();
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openRenewalModal, setOpenRenewalModal] = useState(false);
@@ -35,11 +36,12 @@ export default function UserTableRow({row}: UserTableRowPropTypes) {
   const [copy, setcopy] = useState(false);
   const [openMenu, setOpenMenuActions] = useState(null);
   const { mutate: deleteUser, isPending } = useDeleteUser();
+  const { mutate: updateUser } = useUpdateUser();
   // console.log(translateSevice[service_type]);
   const onRenewalRow = (id: number) => {
     RenewaUser(id);
     setTimeout(() => {
-      
+
     }, 2000);
     setOpenRenewalModal(false)
 
@@ -47,7 +49,7 @@ export default function UserTableRow({row}: UserTableRowPropTypes) {
   const DeleteRow = (id: number) => {
     deleteUser(id);
     setTimeout(() => {
-      
+
     }, 2000);
     setOpenDeleteModal(false)
 
@@ -87,6 +89,12 @@ export default function UserTableRow({row}: UserTableRowPropTypes) {
     setOpenDeleteModal(false)
     setOpenRenewalModal(false)
   };
+  const toggle = (id: number, status: boolean) => {
+    updateUser({
+      id,
+      body: { status }
+    });
+  }
 
   return (
     <TableRow hover>
@@ -100,12 +108,18 @@ export default function UserTableRow({row}: UserTableRowPropTypes) {
       <TableCell align="left">{jalaliDate}</TableCell>
       <TableCell align="left">{endDate}</TableCell>
       <TableCell align="left" style={{ paddingTop: '5px' }}>
-        <Label
-          variant={'filled'}
-          color={(status === true && 'success') || (status === false && 'warning') || 'default'}
+
+        <Button
+          sx={{
+            color: 'darkblue',
+            backgroundColor: (status === true && 'greenyellow') || 'red',
+          }}
+          onClick={() => toggle(row.id, status)}
         >
-          {status == true ? 'فعال' : 'غیرفعال'}
-        </Label>
+
+
+          {status == true ? 'روشن' : 'خاموش'}
+        </Button>
       </TableCell>
       <TableCell align="left">
         <button
@@ -147,7 +161,7 @@ export default function UserTableRow({row}: UserTableRowPropTypes) {
         </TableCell>
       )}
       <TableCell align="left">
-      <ConfirmModal
+        <ConfirmModal
           open={openDeleteModal}
           isLoading={isPending}
           onConfirm={() => DeleteRow(row.id)}
@@ -165,7 +179,7 @@ export default function UserTableRow({row}: UserTableRowPropTypes) {
         </MenuItem>
       </TableCell>
       <TableCell align="left">
-      <ConfirmModal
+        <ConfirmModal
           open={openRenewalModal}
           isLoading={isPending}
           onConfirm={() => onRenewalRow(row.id)}
@@ -178,8 +192,8 @@ export default function UserTableRow({row}: UserTableRowPropTypes) {
           }}
           sx={{ color: '' }}
         >
-          <CachedIcon/>
-          <h4 style={{paddingRight:'10px', color:'blueviolet'}}>تمدید</h4>
+          <CachedIcon />
+          <h4 style={{ paddingRight: '10px', color: 'blueviolet' }}>تمدید</h4>
         </MenuItem>
       </TableCell>
     </TableRow>

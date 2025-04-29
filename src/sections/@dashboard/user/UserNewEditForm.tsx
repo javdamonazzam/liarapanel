@@ -41,8 +41,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser, pharmacyI
   const { value, increment, decrement, setValue } = useCounterStore();
   const { data: ipdata, isLoading } = useFindIp();
   const newdata = ipdata;
-  console.log(ipdata, 'dattatttt in component');
-
   const { push } = useRouter();
   const NewUserSchema = Yup.object().shape({
     title: Yup.string().required('نام اجباری است'),
@@ -51,11 +49,10 @@ export default function UserNewEditForm({ isEdit = false, currentUser, pharmacyI
   const defaultValues = useMemo(
     () => ({
       title: currentUser?.title || '',
-      ip: currentUser?.ip || '',
+      server_id: currentUser?.id || '',
     }),
     [currentUser]
   );
-  console.log(defaultValues, 'curent');
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
@@ -120,10 +117,10 @@ export default function UserNewEditForm({ isEdit = false, currentUser, pharmacyI
             >
               <RHFTextField name="title" label="عنوان کانفیگ" />
 
-              <RHFSelect name="ip" label="نوع ip" placeholder="یک ip انتخاب کنید">
-                <option></option>
+              <RHFSelect name="server_id" label="نوع ip" placeholder="یک ip انتخاب کنید">
+                {/* <option></option> */}
                 {ipdata?.map((item) => (
-                  <option key={item.id} value={item.ip}>
+                  <option key={item.id} value={item.id}>
                     {item.service_type}({item.ip})
                   </option>
                 ))}

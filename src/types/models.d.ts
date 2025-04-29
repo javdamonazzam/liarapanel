@@ -143,7 +143,7 @@ interface User {
 
   user_id?: number;
 
-  status?: UserStatusEnum;
+  status?: boolean;
 
   pharmacy?: Pharmacy;
 
