@@ -119,6 +119,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser, pharmacyI
 
               <RHFSelect name="server_id" label="نوع ip" placeholder="یک ip انتخاب کنید">
                 {/* <option></option> */}
+                <option></option>
                 {ipdata?.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.service_type}({item.ip})
